@@ -1,4 +1,7 @@
-const Koa = require('koa')
+// const Koa = require('koa')
+import Koa from 'Koa'
+import mongooose from './dbs/init'
+import book from './interface/book'
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
@@ -24,6 +27,8 @@ async function start() {
   } else {
     await nuxt.ready()
   }
+
+  app.use(book.routes()).use(book.allowedMethods())
 
   app.use(ctx => {
     ctx.status = 200
