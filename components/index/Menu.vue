@@ -16,7 +16,7 @@ export default {
     };
   },
   async mounted() {
-    const {status,data:{menu}} = await this.$axios.get("/v1/getMenu")
+    const {status,data:{menu}} = await this.$axios.get("/index/getMenu")
     if(status === 200){
       this.menu = menu
     }
@@ -25,6 +25,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .menu {
   .text {
     font-size: 14px;
