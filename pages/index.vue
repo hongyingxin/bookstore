@@ -6,8 +6,7 @@
       </el-col>
       <el-col :span="11">
         <Swiper/>
-        <TopScore/>
-        <!-- <Test/> -->
+        <List/>
       </el-col>
     </el-row>
   </div>
@@ -16,16 +15,14 @@
 <script>
 import Menu from '~/components/index/Menu.vue'
 import Swiper from '~/components/index/Swiper.vue'
-import TopScore from '~/components/index/TopScore.vue'
-import Test from '~/components/index/Test.vue'
+import List from '~/components/index/List.vue'
 
 
 export default {
   components: {
     Menu,
     Swiper,
-    TopScore,
-    Test
+    List,
   }
 }
 </script>
