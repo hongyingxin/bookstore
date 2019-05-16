@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list">
     <TopScore :grade="gradelist"/>
     <NewBook :news="newlist"/>
   </div>
@@ -7,7 +7,6 @@
 <script>
 import TopScore from '~/components/index/TopScore.vue'
 import NewBook from '~/components/index/NewBook.vue'
-import Test from '~/components/index/Test.vue'
 export default {
   data() {
     return {
@@ -28,4 +27,10 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.list{
+  width: 800px;
+}
+</style>
+
 

@@ -2,6 +2,7 @@ import Router from 'koa-router'
 import List from '../dbs/models/book'
 import Menu from '../dbs/models/classify'
 import Swiper from '../dbs/models/swiper'
+import Foolish from '../dbs/models/listbook'
 
 let router = new Router({
   prefix: '/index'
@@ -91,6 +92,37 @@ router.get('/getSwiper', async (ctx) => {
         id: item.swiperId,
         link: item.swiperLink,
         img: item.swiperImg.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url=')
+      }
+    })
+  }
+})
+
+/** 
+ * 豆瓣图书top250
+ * @param {}
+ * @return {list:图书列表}
+ * @time 2019年5月15日
+ * @auto hyx
+*/
+router.get('/getFoolish',async (ctx) => {
+  let list = await Foolish.find()
+  let new_list = list.sort(()=>{
+    return 0.5 - Math.random();
+  }).slice(0,10)
+  ctx.body = {
+    code:0,
+    list:new_list.map(item=>{
+      return{
+        id:item.bookId,
+        img:item.images.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url='),
+        title:item.bookname,
+        author:item.author.toString(),
+        press:item.press.toString(),
+        year:item.year.toString(),
+        price:item.price.toString(),
+        grade:item.grade,
+        grade_number:item.grade_number
+
       }
     })
   }

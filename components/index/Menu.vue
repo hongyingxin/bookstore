@@ -27,6 +27,7 @@ export default {
 <style scoped lang="scss">
 
 .menu {
+  width: 200px;
   .text {
     font-size: 14px;
   }
