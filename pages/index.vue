@@ -5,6 +5,7 @@
         <div class="aside">
           <Menu/>
           <Foolish/>
+          <Rank/>
         </div>
       </el-col>
       <el-col :span="15">
@@ -20,6 +21,7 @@ import Menu from '~/components/index/Menu.vue'
 import Swiper from '~/components/index/Swiper.vue'
 import List from '~/components/index/List.vue'
 import Foolish from '~/components/index/Foolish.vue'
+import Rank from '~/components/index/Rank.vue'
 
 
 export default {
@@ -27,7 +29,8 @@ export default {
     Menu,
     Swiper,
     List,
-    Foolish
+    Foolish,
+    Rank
   }
 }
 </script>
