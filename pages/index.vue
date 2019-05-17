@@ -37,6 +37,8 @@ export default {
 <style lang="scss" scoped>
  .page-index{
    min-width: 1200px;
+   padding-top: 80px;
+   padding-bottom: 100px;
    .aside{
      float: right;
      width: 200px;

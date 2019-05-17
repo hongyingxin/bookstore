@@ -1,0 +1,59 @@
+<template>
+  <div class="login">
+    <div class="add">
+      <img src="../../../assets/images/add.png" alt>
+      <span>发表作品</span>
+    </div>
+    <div class="right">
+      <ul>
+        <li>登录</li>
+        <li>注册</li>
+      </ul>
+    </div>
+  </div>
+</template>
+<style lang="scss" scoped>
+.login {
+  display: flex;
+  .add {
+    margin-right: 40px;
+    display: flex;
+    align-items: center;
+    color: #5dcaad;
+    font-size: 12px;
+    img {
+      width: 12px;
+      height: 12px;
+      margin-right: 5px;
+    }
+  }
+  .right {
+    ul {
+      display: flex;
+      align-items: center;
+      height: 60px;
+      li {
+        cursor: pointer;
+        display: inline-block;
+        background: #fff;
+        color: #333;
+        border-radius: 2px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        border: none;
+        padding: 0 15px;
+        font-size: 12px;
+        height: 26px;
+        line-height: 26px;
+        &:last-child{
+          margin-left: 15px;
+        }
+        &:hover{
+          color: #fff;
+          background-color: #389eac;
+        }
+      }
+    }
+  }
+}
+</style>
+

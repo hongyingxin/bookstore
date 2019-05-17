@@ -12,7 +12,7 @@ let router = new Router({
 /**
  * 首页轮播
  * @param {}
- * @return {gradelist:高分推荐,newlist:最新上架,promotion:打折优惠}
+ * @return {gradelist:高分推荐,newlist:最新上架,promotion:打折优惠,freelist:免费}
  * @time 2019年5月15日
  * @auto hyx
  */
@@ -31,13 +31,17 @@ router.get('/getbook', async (ctx) => {
     isPromotion: true
   }).limit(100)
 
+  let free = await List.find({
+    isDfree: true
+  })
+
 
   ctx.body = {
     code: 0,
     newlist: newlist.map(item => {
       return {
         id: item.bookId,
-        title: item.title,
+        title: (item.title.length > 20)?item.title.substr(0,20)+'...':item.title,
         image: item.image.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url='),
         author: item.author,
         fixedPrice: item.fixedPrice,
@@ -50,7 +54,7 @@ router.get('/getbook', async (ctx) => {
     gradelist: gradelist.map(item => {
       return {
         id: item.bookId,
-        title: item.title,
+        title: (item.title.length > 20)?item.title.substr(0,20)+'...':item.title,
         image: item.image.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url='),
         author: item.author,
         fixedPrice: item.fixedPrice,
@@ -62,11 +66,20 @@ router.get('/getbook', async (ctx) => {
     promotionlist: promotion.map(item =>{
       return {
         id: item.bookId,
-        title: item.title,
+        title: (item.title.length > 20)?item.title.substr(0,20)+'...':item.title,
         image: item.image.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url='),
         author: item.author,
         fixedPrice: item.fixedPrice,
         salesPrice: item.salesPrice,
+      }
+    }),
+    freelist: free.map(item =>{
+      return {
+        id: item.bookId,
+        title: (item.title.length > 20)?item.title.substr(0,20)+'...':item.title,
+        image: item.image.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url='),
+        author: item.author,
+        isDfree: item.isDfree,
       }
     })
   }
