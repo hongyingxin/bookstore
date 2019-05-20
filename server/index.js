@@ -2,6 +2,7 @@
 import Koa from 'Koa'
 import mongooose from './dbs/init'
 import book from './interface/book'
+import classify from './interface/products'
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
@@ -29,7 +30,7 @@ async function start() {
   }
 
   app.use(book.routes()).use(book.allowedMethods())
-
+  app.use(classify.routes()).use(classify.allowedMethods())
   app.use(ctx => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling

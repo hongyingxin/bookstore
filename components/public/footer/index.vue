@@ -26,6 +26,7 @@
 </template>
 <style lang="scss" scoped>
 .footer {
+  min-width: 1200px;
   display: flex;
   justify-content: space-between;
   overflow: hidden;

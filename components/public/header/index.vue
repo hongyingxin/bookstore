@@ -39,6 +39,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .header {
+  min-width: 1200px;
   box-sizing: border-box;
   position: fixed;
   z-index: 100;

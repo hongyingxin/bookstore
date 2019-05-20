@@ -1,7 +1,9 @@
 <template>
   <div class="site">
     <ul>
-      <li>图书</li>
+      <li>
+        <nuxt-link to="/products">图书</nuxt-link>
+      </li>
       <li class="active">排行</li>
     </ul>
   </div>
@@ -19,7 +21,10 @@
       // padding: 0 20px;
       margin: 5px 20px;
       cursor: pointer;
-      &:hover{
+      a{
+        color: #333;
+      }
+      &:hover {
         border-bottom: 1px solid blue;
       }
     }
