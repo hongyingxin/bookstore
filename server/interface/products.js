@@ -39,23 +39,45 @@ router.get('/classify', async (ctx) => {
  * @time 2019年5月20日
  * @auto hyx
  */
-router.get('/list', async (ctx) => {
-  const pageNum = 1
-  const pageSize = 4
-  const kind = 110
+router.post('/list', async (ctx) => {
+  let {
+    params:{
+      pageNum,
+      pageSize,
+      kind
+    }
+  } = ctx.request.body
+
   let findcontent = {
     kind: kind
   }
 
   const count = await Book.countDocuments();
   const template = await Book.find(findcontent).skip((pageNum - 1) * pageSize).limit(pageSize)
-  console.log(count)
-  console.log(template)
-
   ctx.body = {
     code: 0,
     count: count,
-    data: template
+    data: template.map(item => {
+      return {
+        _id:item._id,
+        bookId:item.bookId,
+        kind:item.kind,
+        kindChild:item.kindChild,
+        image:item.image.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url='),
+        title:item.title,
+        author:item.author,
+        detail:item.detail,
+        grade:item.grade,
+        gradeNumber:item.gradeNumber,
+        words:item.words,
+        isDfree: item.isDfree,
+        isNewbook: item.isNewbook,
+        isPromotion: item.isPromotion,
+        isRebate: item.isRebate,
+        fixedPrice: item.fixedPrice,
+        salesPrice: item.salesPrice,
+      }
+    })
   }
   //  await Book.countDocuments({
   //   }, (err, count) => {

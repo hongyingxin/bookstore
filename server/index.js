@@ -1,5 +1,7 @@
 // const Koa = require('koa')
 import Koa from 'Koa'
+import bodyParser from 'koa-bodyparser'
+import json from 'koa-json'
 import mongooose from './dbs/init'
 import book from './interface/book'
 import classify from './interface/products'
@@ -29,6 +31,10 @@ async function start() {
     await nuxt.ready()
   }
 
+  app.use(bodyParser({
+    extendTypes:['json','form','text']
+  }))
+  app.use(json())
   app.use(book.routes()).use(book.allowedMethods())
   app.use(classify.routes()).use(classify.allowedMethods())
   app.use(ctx => {
