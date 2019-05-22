@@ -49,7 +49,7 @@ router.post('/list', async (ctx) => {
   } = ctx.request.body
 
   let findcontent = {
-    kind: kind
+    kind: kind,
   }
 
   const count = await Book.countDocuments();

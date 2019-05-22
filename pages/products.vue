@@ -33,50 +33,43 @@
       </div>
     </div>
     <div class="section-container">
-      <div class="child">
-        <div class="inner">
-          <div class="images-box">
-            <img
-              src="https://images.weserv.nl/?url=img1.doubanio.com/view/ark_article_cover/retina/public/34157247.jpg?v=0"
-              alt
-            >
-          </div>
-          <div class="info">
-            <p class="title">月亮与六便士（作家榜经典）</p>
-            <p class="author">〔英〕毛姆</p>
-            <p class="intro">银行家查尔斯，人到中年，事业有成，为了追求内心隐秘的绘画梦想，突然抛妻别子，弃家出走。他深知：人的每一种身份都是一种自我绑架，唯有失去是通向自由之途。在异国他乡，他贫病交加，对梦想却愈发坚定执着。他说：我必须画画，就像溺水的人必须挣扎。 在经历种种离奇遭遇后，他来到南太平洋的一座孤岛，同当地一位姑娘结婚生子，成功创作出一系列惊世杰作。就在此时，他被绝症和双目失明击倒，临死之前，他做出了让所有人震惊的决定…… 威廉·萨默塞特·毛姆，英国小说家，剧作家，被誉为“故事圣手”。生于巴黎，十岁前父母双亡，由叔叔接回英国抚养，因身材矮小，说话结巴，总被同龄人欺凌，性格孤僻敏感。在文学界，毛姆是一个优雅、老到、冷漠的人性观察者，几乎每一个人都能在他的故事中看到自己，这也让毛姆成为二十世纪炙手可热的作家。 他的后半生住在一座仙境般的别墅里，晚年几乎获得了整个欧洲文学界的一切殊荣。91岁时，逝于法国。经典代表作：《月亮与六便士》《人性的枷锁》。</p>
-            <div class="extra-info">
-              <div class="rating">
-                <span></span>
-                <span class="score">9.4</span>
-                <span class="amount">5,149 评分</span>
-              </div>
-              <div class="words">约 13.4 万字</div>
-              <div class="kind-link">世界名著</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="child"></div>
-      <div class="child"></div>
+      <template v-for="(item,id) in itemList">
+        <Item :list="item"/>
+      </template>
+    </div>
+    <div class="paginator-full">
+      <el-pagination
+        background
+        layout="total, prev, pager, next"
+        @current-change="handleCurrentChange"
+        :page-size="pageSize"
+        :total="total"
+      ></el-pagination>
     </div>
   </div>
 </template>
 
 <script>
+import Item from "~/components/products/Item.vue";
 export default {
   data() {
     return {
-      menu: [],
-      menuId: "1",
-      menuChildId: "",
-      tabId: false,
-      pageNum: 1,
-      pageSize: 10,
-      kind: 100
+      menu: [], //目录
+      itemList: [], //图书列表
+      menuId: "1", //默认选择目录
+      menuChildId: "", //默认二级目录
+      tabId: false, //默认目录隐藏
+      pageNum: 1, //当前页数
+      pageSize: 10, //页码
+      total: "", //总条数
+      kind: 100 //筛选
     };
   },
-  created() {},
+  components: {
+    Item
+  },
+  created() {
+  },
   computed: {
     kindCild: function() {
       // return this.menu.filter(item => item.id === this.menuId)[0]
@@ -85,8 +78,9 @@ export default {
       })[0];
     }
   },
+  mounted() {
+  },
   async asyncData(ctx) {
-    console.log(ctx.query);
     let {
       status: status1,
       data: { code, classify }
@@ -104,25 +98,30 @@ export default {
     });
 
     if (status1 === 200 && status2 === 200) {
-      console.log(data[0]);
       return {
+        total: count,
+        itemList: data,
         menu: classify
       };
     }
   },
   methods: {
-    // test: async function() {
-    //   let {
-    //     status: status2,
-    //     data: { count, data }
-    //   } = await this.$axios.post("/products/list", {
-    //     params: {
-    //       pageNum: 1,
-    //       pageSize: 10,
-    //       kind: 100
-    //     }
-    //   });
-    // },
+    async handleCurrentChange(val) {
+      this.pageNum = val;
+      let {
+        status,
+        data: { code, count, data }
+      } = await this.$axios.post("/products/list", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          kind: this.kind
+        }
+      });
+      if (status === 200 && code === 0) {
+        this.itemList = data;
+      }
+    },
     selector: function(data) {
       this.tabId = !this.tabId;
     },
@@ -132,7 +131,7 @@ export default {
     },
     toolbarChild: function(data) {
       this.menuChildId = data.id;
-    }
+    },
   }
 };
 </script>
@@ -144,6 +143,7 @@ export default {
   padding-top: 80px;
   padding-bottom: 100px;
   .toolbar {
+    position: relative;
     .inner {
       position: relative;
       margin: 0 auto;
@@ -182,6 +182,8 @@ export default {
       }
     }
     .panel {
+      z-index: 100;
+      position: absolute;
       width: 100%;
       // height: 200px;
       padding: 8px 30px 0;
@@ -217,27 +219,10 @@ export default {
     flex-wrap: wrap;
     width: 1200px;
   }
-  .child {
-    padding: 20px;
-    box-sizing: border-box;
-    width: 50%;
-    border-bottom: 1px solid #ddd;
-    .inner {
-      display: flex;
-      .images-box {
-        flex: 0;
-        margin-right: 12px;
-        width: 80px;
-        height: 120px;
-         img {
-          width: 80px;
-          height: 120px;
-        }
-      }
-      .info{
-        flex: 1;
-      }
-    }
+  .paginator-full {
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
   }
 }
 </style>
