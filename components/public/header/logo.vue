@@ -1,6 +1,8 @@
 <template>
   <div class="logo">
-    <div class="douban-icon"></div>
+    <nuxt-link to="/">
+      <div class="douban-icon"></div>
+    </nuxt-link>
     <ul class="nav">
       <li @click="check(1)">
         <img src="../../../assets/images/classify.png" alt>
@@ -20,9 +22,9 @@ export default {
   },
   methods:{
     check: function(data){
-      console.log(this.message.isSearch)
       if (data == 1) {
-        this.message.isClassify = !this.message.isClassify
+        // this.$router.push('/products')
+        // this.message.isClassify = true
       } else if (data == 2){
         this.message.isSearch = !this.message.isSearch
       }

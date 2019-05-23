@@ -48,12 +48,19 @@ router.post('/list', async (ctx) => {
     }
   } = ctx.request.body
 
-  let findcontent = {
-    kind: kind,
-  }
+  /*模糊查询  多条件  数组*/
+  let findcontent = [
+    {"kind": parseInt(kind)},
+    {"kindChild":{$elemMatch:{"kind":kind}}},
+  ]
 
-  const count = await Book.countDocuments();
-  const template = await Book.find(findcontent).skip((pageNum - 1) * pageSize).limit(pageSize)
+  // console.log(pageNum)
+  // console.log(pageSize)
+
+  const count = await Book.countDocuments({"$or":findcontent});
+  // console.log("长度")
+  // console.log(count)
+  const template = await Book.find({"$or":findcontent}).skip((pageNum - 1) * pageSize).limit(pageSize)
   ctx.body = {
     code: 0,
     count: count,
@@ -67,7 +74,7 @@ router.post('/list', async (ctx) => {
         title:item.title,
         author:item.author,
         detail:item.detail,
-        grade:item.grade,
+        grade:item.grade==undefined?"":item.grade,
         gradeNumber:item.gradeNumber,
         words:item.words,
         isDfree: item.isDfree,
