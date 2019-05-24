@@ -4,10 +4,24 @@
       <img src="../../../assets/images/add.png" alt>
       <span>发表作品</span>
     </div>
-    <div class="right">
+    <div class="logon" v-if="user">
+      <div class="logon-button">
+        <span>欢迎你,</span>
+        <span>{{user}}</span>
+      </div>
+      <div class="exit">
+        [
+        <span>退出</span>]
+      </div>
+    </div>
+    <div class="right" v-else>
       <ul>
-        <li>登录</li>
-        <li>注册</li>
+        <li>
+          <nuxt-link to="/login">登录</nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/register">注册</nuxt-link>
+        </li>
       </ul>
     </div>
   </div>
@@ -27,6 +41,24 @@
       margin-right: 5px;
     }
   }
+  .logon {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #333;
+    .logon-button {
+      font-size: 14px;
+    }
+    .exit {
+      margin-left: 10px;
+      span {
+        font-size: 14px;
+        padding-left: 5px;
+        padding-right: 5px;
+        color: #5dcaad;
+      }
+    }
+  }
   .right {
     ul {
       display: flex;
@@ -44,16 +76,40 @@
         font-size: 12px;
         height: 26px;
         line-height: 26px;
-        &:last-child{
+        a {
+          color: #333;
+        }
+        &:last-child {
           margin-left: 15px;
         }
-        &:hover{
+        &:hover {
           color: #fff;
           background-color: #389eac;
+          a {
+            color: #fff;
+          }
         }
       }
     }
   }
 }
 </style>
+<script>
+export default {
+  data() {
+    return {
+      user: ""
+    };
+  },
+  async mounted() {
+    const {
+      status,
+      data: { user }
+    } = await this.$axios.get("/users/getUser");
+    if (status === 200) {
+      this.user = user;
+    }
+  }
+};
+</script>
 
