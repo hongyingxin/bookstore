@@ -105,7 +105,6 @@ export default {
     });
 
     if (status1 === 200 && status2 === 200) {
-      console.log(count)
       return {
         total: count,
         itemList: data,

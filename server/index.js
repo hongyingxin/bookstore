@@ -9,6 +9,7 @@ import passport from './utils/passport'
 import book from './interface/book'
 import classify from './interface/products'
 import user from './interface/user'
+import rank from './interface/rank'
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 
@@ -49,6 +50,7 @@ async function start() {
   app.use(book.routes()).use(book.allowedMethods())
   app.use(classify.routes()).use(classify.allowedMethods())
   app.use(user.routes()).use(user.allowedMethods())
+  app.use(rank.routes()).use(rank.allowedMethods())
   app.use(ctx => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling
