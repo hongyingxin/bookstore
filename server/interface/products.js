@@ -54,9 +54,17 @@ router.post('/list', async (ctx) => {
     {"kindChild":{$elemMatch:{"kind":kind}}},
   ]
 
+  /*如果kind ==1 则查询全部图书*/
+  if(kind == 1){
+    findcontent = [
+      {"kind": {$exists:true}},
+      // {"kindChild":{$exists:true}},
+    ]
+  }
   // console.log(pageNum)
   // console.log(pageSize)
-
+  // console.log("条件")
+  // console.log(kind)
   const count = await Book.countDocuments({"$or":findcontent});
   // console.log("长度")
   // console.log(count)

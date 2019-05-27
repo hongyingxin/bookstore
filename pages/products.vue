@@ -100,11 +100,12 @@ export default {
       params: {
         pageNum: 1,
         pageSize: 10,
-        kind: 100
+        kind: 1
       }
     });
 
     if (status1 === 200 && status2 === 200) {
+      console.log(count)
       return {
         total: count,
         itemList: data,
