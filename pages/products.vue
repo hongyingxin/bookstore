@@ -63,15 +63,14 @@ export default {
       pageNum: 1, //当前页数
       pageSize: 10, //页码
       total: "", //总条数
-      currentPage:1,  //当前页数，支持 .sync 修饰符
+      currentPage: 1, //当前页数，支持 .sync 修饰符
       kind: 100 //筛选
     };
   },
   components: {
     Item
   },
-  created() {
-  },
+  created() {},
   computed: {
     kindCild: function() {
       // return this.menu.filter(item => item.id === this.menuId)[0]
@@ -81,11 +80,11 @@ export default {
     }
   },
   mounted() {
-     document.addEventListener("click",(e) => {
-          if(e.target.contains(this.$refs.tool)){
-         this.tabId = false
-       }
-     })
+    document.addEventListener("click", e => {
+      if (e.target.contains(this.$refs.tool)) {
+        this.tabId = false;
+      }
+    });
   },
   async asyncData(ctx) {
     let {
@@ -114,6 +113,7 @@ export default {
   },
   methods: {
     async handleCurrentChange(val) {
+      console.log(val);
       this.pageNum = val;
       let {
         status,
@@ -135,30 +135,30 @@ export default {
     toolbar: function(data) {
       this.menuId = data.id;
       this.menuChildId = data.id;
-      this.getDate(this.menuId)
+      this.getDate(this.menuId);
     },
     toolbarChild: function(data) {
       this.menuChildId = data.id;
-      this.getDate(this.menuChildId)
+      this.getDate(this.menuChildId);
     },
     async getDate(val) {
       /*初始化页码 页数*/
-      this.pageNum = 1
-      this.pageSize = 10
-      this.currentPage = 1
+      this.pageNum = 1;
+      this.pageSize = 10;
+      this.currentPage = 1;
       let {
         status,
-        data:{code,count,data}
-      } = await this.$axios.post("/products/list",{
-        params:{
+        data: { code, count, data }
+      } = await this.$axios.post("/products/list", {
+        params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           kind: val
         }
-      })
-      if(status === 200 && code === 0){
-        this.itemList = data
-        this.total = count
+      });
+      if (status === 200 && code === 0) {
+        this.itemList = data;
+        this.total = count;
       }
     }
   }

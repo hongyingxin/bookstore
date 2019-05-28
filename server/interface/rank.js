@@ -11,11 +11,12 @@ let router = new Router({
  * @auto hyx
  */
 router.get('/all', async(ctx) => {
-  let content = await Rank.find()
+  let content = await Rank.find({}).sort({'name':-1})
+  // let bookRank = await Rank.find({name:{$regex:'图书'}})
+  // console.log(bookRank)
   ctx.body = {
     code:0,
     data:content.map(item => {
-      // console.log(item)
       return {
         _id:item._id,
         background:item.background.url.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url='),

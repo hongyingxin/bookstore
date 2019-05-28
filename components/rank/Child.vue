@@ -1,135 +1,68 @@
 <template>
-  <div>
-    <div class="ranking-card">
-      <div class="hb">
-        <h1>长篇连载榜</h1>
-        <h2>作品三日内有更新，按周热度排行</h2>
-      </div>
-      <div class="bd">
-        <ul class="ranking-list">
-          <li class="ranking-item" @mouseenter="sover(1)" @mouseleave="sout(2)">
-            <div class="ranking-number">1</div>
+  <div class="ranking-card">
+    <div class="hb">
+      <h1>{{information.name}}</h1>
+      <h2>{{information.fullName}}</h2>
+    </div>
+    <div class="bd">
+      <ul class="ranking-list">
+        <template v-for="(item,id) in information.list">
+          <li class="ranking-item" @mouseenter="sover(id)" @mouseleave="sout(id)">
+            <div class="ranking-number">{{id + 1}}</div>
             <div class="ranking-item-content">
-              <!-- <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>-->
-              <div class="rank-works-detailed">
+              <div class="rank-works-simple" v-show="id != mouseId">
+                <h3 class="title">{{item.works.title}}</h3>
+                <span class="kind-link">{{item.works.kinds[0].shortName}}</span>
+              </div>
+              <div class="rank-works-detailed" v-show="id == mouseId">
                 <div class="info">
-                  <div class="title">女神蒙上眼</div>
-                  <div class="author">金牙太太</div>
-                  <div class="extra-info">言情女性</div>
+                  <div class="title">{{item.works.title}}</div>
+                  <div class="author" v-if="item.works.author.length > 0">{{item.works.author[0].name}}</div>
+                  <div class="author" v-else>暂无信息</div>
+                  <div class="extra-info">{{item.works.kinds[0].shortName}}</div>
                 </div>
                 <div class="cover">
                   <img
-                    src="https://images.weserv.nl/?url=img1.doubanio.com/view/ark_article_cover/retina/public/34157247.jpg?v=0"
-                    alt="女神蒙上眼"
+                    :src="item.works.cover.replace(/^(http)[s]*(\:\/\/)/, 'https://images.weserv.nl/?url=')"
+                    alt
                   >
                 </div>
               </div>
             </div>
           </li>
-          <li class="ranking-item" @mouseenter="sover(1)" @mouseleave="sout(2)">
-            <div class="ranking-number">2</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item" @mouseenter="sover(1)" @mouseleave="sout(2)">
-            <div class="ranking-number">3</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item">
-            <div class="ranking-number">4</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item">
-            <div class="ranking-number">5</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item">
-            <div class="ranking-number">6</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item">
-            <div class="ranking-number">7</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item">
-            <div class="ranking-number">8</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item">
-            <div class="ranking-number">9</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-          <li class="ranking-item">
-            <div class="ranking-number">10</div>
-            <div class="ranking-item-content">
-              <div class="rank-works-simple">
-                <h3 class="title">锦素年华蕴余生</h3>
-                <span class="kind-link">言情女性</span>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="ft">查看详情</div>
+        </template>
+      </ul>
     </div>
+    <div class="ft">查看详情</div>
   </div>
 </template>
 <script>
 export default {
+  data() {
+    return {
+      mouseId: 0
+    };
+  },
+  props: {
+    information: Object
+  },
   methods: {
-    sover: function() {
-      console.log('移入')
+    sover: function(event) {
+      this.mouseId = event;
     },
-    sout: function() {
-      console.log('移除')
+    sout: function(event) {
+      this.mouseId = 0;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 1256px) {
+  .rankings-list .ranking-card {
+    width: calc(33.33% - 16px);
+  }
+}
 .ranking-card {
   display: inline-block;
   vertical-align: top;
@@ -254,6 +187,7 @@ export default {
     }
   }
   .ft {
+    cursor: pointer;
     text-align: center;
     line-height: 1;
     padding: 25px 0;

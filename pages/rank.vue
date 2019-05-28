@@ -8,33 +8,70 @@
     <el-row>
       <el-col :span="24">
         <ul class="rank-nav">
-          <li class="active">全部</li>
-          <li v-for="(item,id) in list" :key="id" @click="checkoutNav(item)">{{item.name}}</li>
+          <li :class="{active: isActive}" @click="showAll">全部</li>
+          <li v-for="(item,id) in list" :key="id" @click="checkoutNav(item,id)" :class="navCheckout==id?'active':''">{{item.name}}</li>
         </ul>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
-        <section class="rankings-group">
-          <p class="rankbox-title">综合排行</p>
-          <div class="rankings-list">
-            <Child/>
-          </div>
-        </section>
+        <div class="all_rank" v-if="!allRank">
+          <section class="rankings-group">
+            <p class="rankbox-title">综合排行</p>
+            <div class="rankings-list">
+              <template v-for="(item,id) in list.slice(0,4)">
+                <Child :information="item"/>
+              </template>
+            </div>
+          </section>
+          <section class="rankings-group">
+            <p class="rankbox-title">频道排行</p>
+            <div class="rankings-list">
+              <template v-for="(item,id) in list.slice(4,12)">
+                <Child :information="item"/>
+              </template>
+            </div>
+          </section>
+          <section class="rankings-group">
+            <p class="rankbox-title">女性排行</p>
+            <div class="rankings-list">
+              <template v-for="(item,id) in list.slice(12,16)">
+                <Child :information="item"/>
+              </template>
+            </div>
+          </section>
+          <section class="rankings-group">
+            <p class="rankbox-title">测试排行</p>
+            <div class="rankings-list">
+              <template v-for="(item,id) in list.slice(17,23)">
+                <Child :information="item"/>
+              </template>
+            </div>
+          </section>
+        </div>
+        <div class="each_rank" v-else>
+          <Each :child="childDate"/>
+        </div>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
 import Child from "~/components/rank/Child.vue";
+import Each from "~/components/rank/Each.vue";
 export default {
   data() {
     return {
-      list: [] //排行榜数据
+      list: [], //排行榜数据
+      allRank:false, //切换全部和子榜单
+      childDate:[],  //单个子榜单数据
+      navCheckout:-1,  //榜单切换
+      isActive:true
     };
   },
   components: {
-    Child
+    Child,
+    Each
   },
   async asyncData(ctx) {
     let {
@@ -42,14 +79,23 @@ export default {
       data: { code, data }
     } = await ctx.$axios.get("/rank/all");
     if (status === 200) {
+      console.log(data[0])
       return {
         list: data
       };
     }
   },
   methods: {
-    checkoutNav: function(params) {
-      console.log(params);
+    checkoutNav: function(params,index) {
+      this.allRank = true
+      this.isActive = false
+      this.childDate = params
+      this.navCheckout = index
+    },
+    showAll: function() {
+      this.isActive = true
+      this.navCheckout = -1
+      this.allRank = false
     }
   }
 };
@@ -58,7 +104,7 @@ export default {
 .rank {
   background-color: #f8f9f9;
   margin: 0 auto;
-  // width: 1200px;
+  min-width: 1200px;
   padding-top: 80px;
   padding-bottom: 100px;
   .rank-title {
@@ -66,6 +112,8 @@ export default {
     font-size: 30px;
     font-weight: bold;
     margin: 10px auto 20px auto;
+    padding-left: 60px;
+    padding-right: 60px;
     color: #333;
   }
   .rank-nav {
@@ -73,6 +121,8 @@ export default {
     margin: 0 auto 40px auto;
     display: flex;
     flex-wrap: wrap;
+    padding-left: 60px;
+    padding-right: 60px;
     li {
       display: inline-block;
       background: #fff;
