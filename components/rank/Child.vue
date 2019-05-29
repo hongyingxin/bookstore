@@ -33,7 +33,7 @@
         </template>
       </ul>
     </div>
-    <div class="ft">查看详情</div>
+    <div class="ft" @click="viewDetail(information)">查看详情</div>
   </div>
 </template>
 <script>
@@ -52,6 +52,9 @@ export default {
     },
     sout: function(event) {
       this.mouseId = 0;
+    },
+    viewDetail: function(data) {
+      this.$emit("listenDetail",data)
     }
   }
 };

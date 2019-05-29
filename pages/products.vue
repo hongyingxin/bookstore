@@ -64,7 +64,8 @@ export default {
       pageSize: 10, //页码
       total: "", //总条数
       currentPage: 1, //当前页数，支持 .sync 修饰符
-      kind: 100 //筛选
+      kind: 100, //筛选
+      scrollTop:0 //滚动条
     };
   },
   components: {
@@ -85,6 +86,10 @@ export default {
         this.tabId = false;
       }
     });
+    window.addEventListener("scroll", this.scrollToTop);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.scrollToTop);
   },
   async asyncData(ctx) {
     let {
@@ -128,6 +133,7 @@ export default {
       if (status === 200 && code === 0) {
         this.itemList = data;
       }
+      this.backTop();
     },
     selector: function(data) {
       this.tabId = !this.tabId;
@@ -160,6 +166,24 @@ export default {
         this.itemList = data;
         this.total = count;
       }
+    },
+    backTop: function() {
+      let that = this;
+      let timer = setInterval(() => {
+        let ispeed = Math.floor(-that.scrollTop / 5);
+        document.documentElement.scrollTop = document.body.scrollTop =
+          that.scrollTop + ispeed;
+        if (that.scrollTop === 0) {
+          clearInterval(timer);
+        }
+      }, 15);
+    },
+    scrollToTop() {
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      this.scrollTop = scrollTop;
     }
   }
 };

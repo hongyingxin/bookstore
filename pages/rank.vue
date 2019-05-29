@@ -9,7 +9,12 @@
       <el-col :span="24">
         <ul class="rank-nav">
           <li :class="{active: isActive}" @click="showAll">全部</li>
-          <li v-for="(item,id) in list" :key="id" @click="checkoutNav(item,id)" :class="navCheckout==id?'active':''">{{item.name}}</li>
+          <li
+            v-for="(item,id) in list"
+            :key="id"
+            @click="checkoutNav(item)"
+            :class="navCheckout==item._id?'active':''"
+          >{{item.name}}</li>
         </ul>
       </el-col>
     </el-row>
@@ -20,7 +25,7 @@
             <p class="rankbox-title">综合排行</p>
             <div class="rankings-list">
               <template v-for="(item,id) in list.slice(0,4)">
-                <Child :information="item"/>
+                <Child :information="item" v-on:listenDetail="skipDetail"/>
               </template>
             </div>
           </section>
@@ -28,7 +33,7 @@
             <p class="rankbox-title">频道排行</p>
             <div class="rankings-list">
               <template v-for="(item,id) in list.slice(4,12)">
-                <Child :information="item"/>
+                <Child :information="item" v-on:listenDetail="skipDetail"/>
               </template>
             </div>
           </section>
@@ -36,7 +41,7 @@
             <p class="rankbox-title">女性排行</p>
             <div class="rankings-list">
               <template v-for="(item,id) in list.slice(12,16)">
-                <Child :information="item"/>
+                <Child :information="item" v-on:listenDetail="skipDetail"/>
               </template>
             </div>
           </section>
@@ -44,7 +49,7 @@
             <p class="rankbox-title">测试排行</p>
             <div class="rankings-list">
               <template v-for="(item,id) in list.slice(17,23)">
-                <Child :information="item"/>
+                <Child :information="item" v-on:listenDetail="skipDetail"/>
               </template>
             </div>
           </section>
@@ -63,10 +68,11 @@ export default {
   data() {
     return {
       list: [], //排行榜数据
-      allRank:false, //切换全部和子榜单
-      childDate:[],  //单个子榜单数据
-      navCheckout:-1,  //榜单切换
-      isActive:true
+      allRank: false, //切换全部和子榜单
+      childDate: [], //单个子榜单数据
+      navCheckout: -1, //榜单切换
+      isActive: true, //全部
+      scrollTop:0 //滚动条
     };
   },
   components: {
@@ -79,23 +85,54 @@ export default {
       data: { code, data }
     } = await ctx.$axios.get("/rank/all");
     if (status === 200) {
-      console.log(data[0])
       return {
         list: data
       };
     }
   },
+
+  mounted() {
+    window.addEventListener("scroll", this.scrollToTop);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.scrollToTop);
+  },
   methods: {
-    checkoutNav: function(params,index) {
-      this.allRank = true
-      this.isActive = false
-      this.childDate = params
-      this.navCheckout = index
+    checkoutNav: function(params) {
+      this.allRank = true;
+      this.isActive = false;
+      this.childDate = params;
+      this.navCheckout = params._id;
     },
     showAll: function() {
-      this.isActive = true
-      this.navCheckout = -1
-      this.allRank = false
+      this.isActive = true;
+      this.navCheckout = -1;
+      this.allRank = false;
+    },
+    skipDetail: function(data) {
+      this.allRank = true;
+      this.isActive = false;
+      this.childDate = data;
+      this.navCheckout = data._id;
+      this.backTop();
+    },
+    backTop: function() {
+      let that = this;
+      let timer = setInterval(() => {
+        let ispeed = Math.floor(-that.scrollTop / 5);
+        document.documentElement.scrollTop = document.body.scrollTop =
+          that.scrollTop + ispeed;
+        if (that.scrollTop === 0) {
+          clearInterval(timer);
+        }
+      }, 15);
+    },
+    scrollToTop() {
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      this.scrollTop = scrollTop;
     }
   }
 };
