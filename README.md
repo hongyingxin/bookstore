@@ -20,3 +20,5 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+
+项目的数据使用Puppeteer爬虫工具抓取豆瓣电子书数据。数据库使用mongodb
