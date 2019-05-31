@@ -3,30 +3,15 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const {ObjectId,Mixed} = Schema.Types
 
-const BookSchema = new Schema({
-  kind: Mixed,
-  kindChild: Array,
-  bookId:{
+const PressSchema = new Schema({
+  id:{
     unique: true,
     type: String
   },
   image: String,
   title: String,
-  author: String,
   detail: String,
-  grade: Mixed,
-  gradeNumber: String,
-  words: String,
-  isDfree: Boolean,
-  isNewbook: Boolean,
-  isPromotion: Boolean,
-  isRebate: Boolean,
-  fixedPrice: Mixed,
-  salesPrice: Mixed,
-  onSaleTime: Mixed,
-  isbn:String,
-  press:String,
-  tags:Array,
+  gather:Array,
   meta: {
     createdAt: {
       type: Date,
@@ -39,7 +24,7 @@ const BookSchema = new Schema({
   }
 })
 /*更新时间*/ 
-BookSchema.pre('save', function(next) {
+PressSchema.pre('save', function(next) {
   if(this.isNew){
       this.meta.createdAt = this.meta.updatedAt = Date.now()
   }else{
@@ -49,4 +34,4 @@ BookSchema.pre('save', function(next) {
   next()
 })
 
-module.exports = mongoose.model('Book', BookSchema)
+module.exports = mongoose.model('Press', PressSchema)
