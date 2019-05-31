@@ -1,7 +1,7 @@
 <template>
   <div class="child">
     <div class="inner">
-      <div class="images-box">
+      <div class="images-box" @click="godetail(list._id)">
         <img :src="list.image" alt>
       </div>
       <div class="info">
@@ -11,8 +11,8 @@
         <div class="extra-info">
           <div class="rating" v-if="list.grade.length > 0">
             <span class="star"></span>
-            <span class="score">9.4</span>
-            <span class="amount">5,149 评分</span>
+            <span class="score">{{list.grade}}</span>
+            <span class="amount">{{list.gradeNumber}}</span>
           </div>
           <!--暂无评分-->
           <div class="rating-no" v-else>
@@ -51,7 +51,7 @@
         <!--普通-->
         <div class="sale" v-else>
           <span class="price-tag">
-            <span class="rmb-tag">￥2.99</span>
+            <span class="rmb-tag">￥{{list.fixedPrice}}</span>
           </span>
         </div>
         <div class="btn-car">
@@ -66,18 +66,11 @@ export default {
   props: {
     list: Object
   },
-  // watch: {
-  //   list: {
-  //     handler(newValue, oldValue) {
-  //       for (let i = 0; i < newValue.length; i++) {
-  //         if (oldValue[i] != newValue[i]) {
-  //           console.log(newValue);
-  //         }
-  //       }
-  //     },
-  //     deep: true
-  //   }
-  // }
+  methods: {
+    godetail: function(data) {
+      this.$router.push({ name: 'detail',query:{bookId:data}}) 
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -93,6 +86,7 @@ export default {
   .inner {
     display: flex;
     .images-box {
+      cursor: pointer;
       flex: 0;
       margin-right: 12px;
       width: 80px;
